@@ -19,6 +19,7 @@ namespace TakeColor
         private static readonly Bitmap cache = new Bitmap(1, 1);
         private static readonly Graphics tempGraphics = Graphics.FromImage(cache);
         private readonly Model[,] _models;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,7 +37,10 @@ namespace TakeColor
                 for (var j = 0; j < 2 * COLUMN + 1; j++)
                 {
                     _models[i, j] = new Model();
-                    var textblock = new TextBlock();
+                    var textblock = new TextBlock
+                                    {
+                                        Padding = new Thickness(0, 7, 0, 0)
+                                    };
                     textblock.SetBinding(TextBlock.BackgroundProperty,
                                          new Binding("Background")
                                          {
@@ -70,27 +74,28 @@ namespace TakeColor
                 }
             }
             KeyDown += (sender, e) =>
-                       {
-                           if (e.Key == Key.F1)
-                           {
-                               var x = Control.MousePosition.X;
-                               var y = Control.MousePosition.Y;
-                               for (var i = 0; i < 2 * ROW + 1; i++)
-                               {
-                                   for (var j = 0; j < 2 * COLUMN + 1; j++)
-                                   {
-                                       GetColor(x - ROW + i, y - COLUMN + j, i, j);
-                                   }
-                               }
-                           }
-                       };
+            {
+                if (e.Key == Key.F1)
+                {
+                    var x = Control.MousePosition.X;
+                    var y = Control.MousePosition.Y;
+                    for (var i = 0; i < 2 * ROW + 1; i++)
+                    {
+                        for (var j = 0; j < 2 * COLUMN + 1; j++)
+                        {
+                            GetColor(x - ROW + i, y - COLUMN + j, i, j);
+                        }
+                    }
+                }
+            };
         }
+
         private void GetColor(int x, int y, int i, int j)
         {
             tempGraphics.CopyFromScreen(x - ROW + i, y - COLUMN + j, 0, 0, new Size(1, 1));
             var color = cache.GetPixel(0, 0);
             _models[i, j].Background = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-            _models[i, j].Text = string.Format("{0}\n({1}, {2})", ColorTranslator.ToHtml(color), x, y);
+            _models[i, j].Text = string.Format("{0}\n\n({1}, {2})", ColorTranslator.ToHtml(color), x, y);
         }
     }
 }
