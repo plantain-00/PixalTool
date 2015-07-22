@@ -95,7 +95,7 @@ namespace TakeColor
             tempGraphics.CopyFromScreen(x - ROW + i, y - COLUMN + j, 0, 0, new Size(1, 1));
             var color = cache.GetPixel(0, 0);
             _models[i, j].Background = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
-            _models[i, j].Text = string.Format("{0}\n\n({1}, {2})", ColorTranslator.ToHtml(color), x, y);
+            _models[i, j].Text = $"{ColorTranslator.ToHtml(color)}\n\n({x}, {y})";
         }
     }
 }
